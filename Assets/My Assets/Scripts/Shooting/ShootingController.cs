@@ -30,6 +30,8 @@ public class ShootingController : MonoBehaviour
     [SerializeField] private AudioSource _audioSource;
     [SerializeField] private AudioClip _shootingSound;
     [SerializeField] private AudioClip _reloadSound;
+    [SerializeField] private float _gunShotVolumeMultiplier;
+    [SerializeField] private float _reloadVolumeMultiplier;
 
     private PlayerInputActions _playerInput;
     #endregion
@@ -42,6 +44,7 @@ public class ShootingController : MonoBehaviour
 
         //Ammo
         _currentAmmo = _maxAmmo;
+        UIManager.Instance.UpdateAmmoText(_currentAmmo);
     }
 
     private void Update()
@@ -82,7 +85,7 @@ public class ShootingController : MonoBehaviour
 
     private void Shoot()
     {
-        if(_currentAmmo > 0) {        
+        if(!_gunAnimator.GetCurrentAnimatorStateInfo(0).IsName("Draw") && _currentAmmo > 0) {        
             RaycastHit hitInfo;
             if (Physics.Raycast(_firePoint.position, _firePoint.forward, out hitInfo, _fireRange))
             {
@@ -105,7 +108,8 @@ public class ShootingController : MonoBehaviour
             _muzzleFlash.Play();
             _gunAnimator.SetBool("Shoot", true);
             _currentAmmo--;
-            _audioSource.PlayOneShot(_shootingSound, 0.1f);
+            UIManager.Instance.UpdateAmmoText(_currentAmmo);
+            _audioSource.PlayOneShot(_shootingSound, _gunShotVolumeMultiplier);
         }     
     }
 
@@ -123,7 +127,7 @@ public class ShootingController : MonoBehaviour
         {
             _gunAnimator.SetTrigger("Reload");
             _isReloading = true;
-            _audioSource.PlayOneShot(_reloadSound, 0.2f);
+            _audioSource.PlayOneShot(_reloadSound, _reloadVolumeMultiplier);
             Invoke("FinishReloading", _reloadTime);
         }
     }
@@ -131,7 +135,13 @@ public class ShootingController : MonoBehaviour
     private void FinishReloading()
     {
         _currentAmmo = _maxAmmo;
+        UIManager.Instance.UpdateAmmoText(_currentAmmo);
         _isReloading = false;
         _gunAnimator.ResetTrigger("Reload");
+    }
+
+    public int GetMaxAmmo()
+    {
+        return _maxAmmo;
     }
 }

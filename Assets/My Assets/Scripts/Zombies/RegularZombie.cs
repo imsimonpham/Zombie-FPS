@@ -33,10 +33,10 @@ public class RegularZombie : MonoBehaviour
     [Header("Animations")]
     [SerializeField] private Animator _animator;
 
-    [Header("Player")]
-    [SerializeField] private Transform _player;
-    [SerializeField] private PlayerController playerController;
+    [Header("Player")]   
     [SerializeField] private LayerMask _hitMask;
+    private Transform _player;
+    private PlayerController _playerController;
     #endregion
 
     private void Awake()
@@ -47,6 +47,13 @@ public class RegularZombie : MonoBehaviour
             Debug.LogError("Blood Screen Effect is null");
         }
         _capsuleCollider = GetComponent<CapsuleCollider>();
+
+        _player = GameObject.FindGameObjectWithTag("Player").transform;
+        if (_player == null)
+        {
+            Debug.LogError("Player is null");
+        }
+        _playerController = _player.GetComponent<PlayerController>();     
     }
 
     private void Update()
@@ -114,8 +121,7 @@ public class RegularZombie : MonoBehaviour
         _agent.enabled = false;
         _capsuleCollider.enabled = false;
         this.enabled = false;
-        //increase score
-        Debug.Log("Zombie died");
+        GameManager.Instance.IncreaseScore();
     }
     #endregion
 
@@ -145,7 +151,7 @@ public class RegularZombie : MonoBehaviour
     private IEnumerator AttackRoutine()
     {
         _isAttacking = true;
-        playerController.TakeDamage(_attackDamage);
+        _playerController.TakeDamage(_attackDamage);
         yield return new WaitForSeconds(_attackCooldownTime);
         _isAttacking = false;
         _lastAttackTime = _attackTimer;

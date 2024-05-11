@@ -38,9 +38,9 @@ public class PatrollingZombie : MonoBehaviour
     [SerializeField] private Animator _animator;
 
     [Header("Player")]
-    [SerializeField] private Transform _player;
-    [SerializeField] private PlayerController playerController;
     [SerializeField] private LayerMask _hitMask;
+    private Transform _player;
+    private PlayerController _playerController; 
     #endregion
 
     private void Awake()
@@ -51,6 +51,13 @@ public class PatrollingZombie : MonoBehaviour
             Debug.LogError("Blood Screen Effect is null");
         }
         _capsuleCollider = GetComponent<CapsuleCollider>();
+
+        _player = GameObject.FindGameObjectWithTag("Player").transform;
+        if (_player == null)
+        {
+            Debug.LogError("Player is null");
+        }
+        _playerController = _player.GetComponent<PlayerController>();
     }
 
     private void Update()
@@ -121,16 +128,7 @@ public class PatrollingZombie : MonoBehaviour
         _agent.enabled = false;
         _capsuleCollider.enabled = false;
         this.enabled = false;
-        //increase score
-        Debug.Log("Zombie died");
-
-       /* _animator.SetBool("isAttacking", false);
-        _animator.SetBool("isDead", true);
-        _agent.enabled = false;
-        _capsuleCollider.enabled = false;
-        this.enabled = false;
-        //increase score
-        Debug.Log("Zombie died");*/
+        GameManager.Instance.IncreaseScore();
     }
     #endregion
 
@@ -139,7 +137,7 @@ public class PatrollingZombie : MonoBehaviour
     private IEnumerator AttackRoutine()
     {
         _isAttacking = true;
-        playerController.TakeDamage(_attackDamage);
+        _playerController.TakeDamage(_attackDamage);
         yield return new WaitForSeconds(_attackCooldownTime);
         _isAttacking = false;
         _lastAttackTime = _attackTimer;
@@ -191,7 +189,7 @@ public class PatrollingZombie : MonoBehaviour
 
     private bool PlayerIsInRange(float range) { return Vector3.Distance(transform.position, _player.transform.position) <= range; }
 
-    private void Die() { _currentState = ZombieState.Die; }
+    private void Die() {_currentState = ZombieState.Die; }
 
     void OnDrawGizmos()
     {

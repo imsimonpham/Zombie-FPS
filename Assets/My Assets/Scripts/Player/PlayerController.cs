@@ -9,7 +9,7 @@ public class PlayerController : MonoBehaviour
 
     [Header("Player's Health & Damage")]
     [SerializeField] private float _currentHealth;
-    private float _maxHealth = 100;  
+    private float _maxHealth = 200;  
 
     [Header("Player's Movement & Gravity")]
     [SerializeField] private float _movementSpeed;
@@ -120,7 +120,8 @@ public class PlayerController : MonoBehaviour
     public void TakeDamage(float dmg)
     {
         _currentHealth -= dmg;
-        if(_currentHealth <= 0)
+        UIManager.Instance.UpdateHealthBar(_currentHealth);
+        if (_currentHealth <= 0)
         {
             _currentHealth = 0;
             Die();
@@ -139,6 +140,11 @@ public class PlayerController : MonoBehaviour
     public Vector2 GetLookVector()
     {
         return _playerInput.Player.Look.ReadValue<Vector2>();
+    }
+
+    public float GetMaxHealth()
+    {
+        return _maxHealth;
     }
     #endregion
 }
