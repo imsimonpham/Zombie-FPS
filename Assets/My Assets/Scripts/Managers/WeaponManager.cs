@@ -10,8 +10,11 @@ public class WeaponManager : MonoBehaviour
     {
         //Player's Input
         _playerInput = new PlayerInputActions();
-        _playerInput.Enable();
+        _playerInput.Enable(); 
+    }
 
+    private void Start()
+    {
         SwitchWeapon(_currentWeaponIndex);
     }
 
@@ -20,7 +23,7 @@ public class WeaponManager : MonoBehaviour
         HandleWeaponSwitching();
     }
 
-    public void SwitchWeapon(int newWeaponIndex)
+    private void SwitchWeapon(int newWeaponIndex)
     {
         _weapons[_currentWeaponIndex].SetActive(false);
         _weapons[newWeaponIndex].SetActive(true);
@@ -28,7 +31,7 @@ public class WeaponManager : MonoBehaviour
         ShootingController gun = _weapons[_currentWeaponIndex].GetComponent<ShootingController>();
         if(gun != null)
         {
-            UIManager.Instance.UpdateAmmoText(gun.GetMaxAmmo());
+           UIManager.Instance.UpdateAmmoText(gun.GetCurrentAmmo());
         }
     }
 

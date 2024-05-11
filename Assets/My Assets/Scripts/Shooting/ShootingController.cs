@@ -1,4 +1,5 @@
 using UnityEngine;
+using MyBox;
 
 public class ShootingController : MonoBehaviour
 {
@@ -11,6 +12,7 @@ public class ShootingController : MonoBehaviour
     [Header("Shooting")]
     [SerializeField] private Transform _firePoint;    
     [SerializeField] private bool _auto;
+
     private float _nextFireTime = 0f;
 
     [Header("Ammunation")]
@@ -34,7 +36,11 @@ public class ShootingController : MonoBehaviour
     [SerializeField] private float _reloadVolumeMultiplier;
 
     private PlayerInputActions _playerInput;
+
+    
     #endregion
+
+
 
     private void Start()
     {
@@ -140,8 +146,8 @@ public class ShootingController : MonoBehaviour
         _gunAnimator.ResetTrigger("Reload");
     }
 
-    public int GetMaxAmmo()
+    public int GetCurrentAmmo()
     {
-        return _maxAmmo;
+        return _currentAmmo;
     }
 }

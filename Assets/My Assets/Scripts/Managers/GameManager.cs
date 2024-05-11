@@ -2,24 +2,34 @@ using UnityEngine;
 
 public class GameManager : MonoSingleton<GameManager>
 {
+    [Header("High Score")]
     [SerializeField] private int _highScore;
     [SerializeField] private int _currentScore;
+
+    [Header("Gameplay")]
     [SerializeField] private float _timer;
+    private bool _showDeathScreen = false;
 
     private void Start()
     {
         _currentScore = 0;
         UIManager.Instance.UpdateScoreText(_currentScore);
     }
-
     private void Update()
     {
+        //Timer
         Timer();
+
+        //High Score
         if (_currentScore > _highScore)
         {
             _highScore = _currentScore;
             UIManager.Instance.UpdateHighScoreText(_currentScore);
         }
+
+        //Death Screen
+        if (_showDeathScreen)
+            UIManager.Instance.ShowDeathScreen();
     }
 
     public void IncreaseScore()
@@ -39,4 +49,6 @@ public class GameManager : MonoSingleton<GameManager>
         string timeString = string.Format("{0:00}:{1:00}", minutes, seconds);
         UIManager.Instance.UpdateTimerText(timeString);
     }
+
+    public void PlayerDied() { _showDeathScreen = true; }
 }

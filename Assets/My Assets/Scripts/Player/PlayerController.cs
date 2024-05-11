@@ -9,7 +9,7 @@ public class PlayerController : MonoBehaviour
 
     [Header("Player's Health & Damage")]
     [SerializeField] private float _currentHealth;
-    private float _maxHealth = 200;  
+    private float _maxHealth = 100;  
 
     [Header("Player's Movement & Gravity")]
     [SerializeField] private float _movementSpeed;
@@ -124,14 +124,8 @@ public class PlayerController : MonoBehaviour
         if (_currentHealth <= 0)
         {
             _currentHealth = 0;
-            Die();
+            GameManager.Instance.PlayerDied();
         }
-    }
-
-    private void Die()
-    {
-        //death screen
-        Debug.Log("Player Died");
     }
     #endregion
 

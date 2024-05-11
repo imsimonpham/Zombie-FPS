@@ -4,12 +4,14 @@ public class CameraController : MonoBehaviour
 {
     #region Variables
     [SerializeField] private Transform _player;
-    [Range(0.0f, 50.0f)]
+    [Range(1f, 20.0f)]
+    [SerializeField] private float _unscopeSensitivity;
     [SerializeField] private float _lookSensitivity;
     [SerializeField] private float _minXAngle;
     [SerializeField] private float _maxXAngle;
     [SerializeField] private float _minYAngle;
     [SerializeField] private float _maxYAngle;
+    [Range(1f, 20f)]
     [SerializeField] private float _smoothSpeed;
 
     private PlayerController _playerController;
@@ -26,6 +28,7 @@ public class CameraController : MonoBehaviour
         {
             Debug.LogError("Player is null");
         }
+        _lookSensitivity = _unscopeSensitivity;
     }
 
     private void Update()
@@ -48,4 +51,7 @@ public class CameraController : MonoBehaviour
         _player.rotation = Quaternion.Slerp(_player.rotation, targetRot, _smoothSpeed * Time.deltaTime);
         transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, _smoothSpeed * Time.deltaTime);
     }
+
+    public void SetLookSensitivity(float sensitivity) { _lookSensitivity = sensitivity; }
+    public float GetUnscopeSensitity() { return _unscopeSensitivity; }
 }
